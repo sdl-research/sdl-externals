@@ -1,0 +1,2 @@
+This is log4cxx-0.10.0 with a bug fix patch that prevents crashing,
+see https://issues.apache.org/jira/browse/LOGCXX-322.

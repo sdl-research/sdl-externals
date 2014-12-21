@@ -1,0 +1,1 @@
+MD: Small change to fix compiler warning, in src/include/fst/encode.h.

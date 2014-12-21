@@ -1,0 +1,3 @@
+http://sourceforge.net/projects/utfcpp/
+
+modified to compile under c++11 ('append' -> 'utf8::append' - is someone else using namespace std?)
