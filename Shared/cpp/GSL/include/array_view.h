@@ -69,7 +69,7 @@ namespace gsl {
 /// we have C++14 type_traits; bring them into this namespace
 using std::enable_if_t;
 using std::conditional_t;
-#define SDL_TYPETRAITS_T(traitname) using std::traitname##_t;
+#define GSL_USING_TYPETRAITS_T(traitname) using std::traitname##_t;
 #else
 #define GSL_CPLUSPLUS_14 0
 /// define the C++14 type_traits trait_t aliases that we use (in this namespace)
