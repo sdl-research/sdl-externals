@@ -36,12 +36,11 @@
 #ifdef _MSC_VER
 
 // attempting VS 2015 constexpr (was disabled)
-
+#define GSL_CPLUSPLUS14 1
 // VS 2013 workarounds
 #if _MSC_VER <= 1800
 #pragma push_macro("constexpr")
 #define constexpr /* nothing */
-#define GSL_DISABLED_CONSTEXPR 1
 
 // noexcept is not understood
 #ifndef GSL_THROWS_FOR_TESTING
@@ -53,8 +52,9 @@
 #pragma warning(disable: 4351) // warns about newly introduced aggregate initializer behavior
 
 #endif // _MSC_VER <= 1800
-
-#endif // _MSC_VER
+#else // MSC_VER
+#define GSL_CPLUSPLUS14 __cplusplus >= 201400L
+#endif // !_MSC_VER
 
 // In order to test the library, we need it to throw exceptions that we can catch
 #ifdef GSL_THROWS_FOR_TESTING
@@ -64,14 +64,13 @@
 
 namespace gsl {
 
-#if __cplusplus >= 201400L
+#if GSL_CPLUSPLUS14
 #define GSL_CPLUSPLUS_14 1
 /// we have C++14 type_traits; bring them into this namespace
 using std::enable_if_t;
 using std::conditional_t;
 #define GSL_USING_TYPETRAITS_T(traitname) using std::traitname##_t;
 #else
-#define GSL_CPLUSPLUS_14 0
 /// define the C++14 type_traits trait_t aliases that we use (in this namespace)
 template <bool B, class T = void>
 using enable_if_t = typename std::enable_if<B, T>::type;
@@ -82,7 +81,7 @@ using conditional_t = typename std::conditional<b, T, F>::type;
   using traitname##_t = typename std::traitname<E>::type;
 #endif
 
-#if GSL_CPLUSPLUS_14 || GSL_DISABLED_CONSTEXPR
+#if GSL_CPLUSPLUS_14
 #define GSL_14_constexpr constexpr
 #define GSL_14_fail_fast_assert(...) fail_fast_assert(__VA_ARGS__)
 #else
