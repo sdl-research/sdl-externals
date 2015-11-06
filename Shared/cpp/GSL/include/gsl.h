@@ -1,17 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
-//
-// This code is licensed under the MIT License (MIT).
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
+/////////////////////////////////////////////////////////////////////////////// 
+// 
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved. 
+// 
+// This code is licensed under the MIT License (MIT). 
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+// THE SOFTWARE. 
+// 
 ///////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -19,8 +19,8 @@
 #ifndef GSL_GSL_H
 #define GSL_GSL_H
 
-#include "array_view.h"     // array_view, strided_array_view...
-#include "string_view.h"    // zstring, string_view, zstring_builder...
+#include "span.h"           // span, strided_span...
+#include "string_span.h"    // zstring, string_span, zstring_builder...
 #include <memory>
 
 #ifdef _MSC_VER
@@ -32,9 +32,9 @@
 // MSVC 2013 workarounds
 #if _MSC_VER <= 1800
 
-// noexcept is not understood
+// noexcept is not understood 
 #ifndef GSL_THROWS_FOR_TESTING
-#define noexcept /* nothing */
+#define noexcept /* nothing */ 
 #endif
 
 // turn off some misguided warnings
@@ -47,15 +47,15 @@
 
 // In order to test the library, we need it to throw exceptions that we can catch
 #ifdef GSL_THROWS_FOR_TESTING
-#define noexcept /* nothing */
-#endif // GSL_THROWS_FOR_TESTING
+#define noexcept /* nothing */ 
+#endif // GSL_THROWS_FOR_TESTING 
 
 
 namespace gsl
 {
 
 //
-// GSL.owner: ownership pointers
+// GSL.owner: ownership pointers 
 //
 using std::unique_ptr;
 using std::shared_ptr;
@@ -124,11 +124,11 @@ typename Cont::value_type& at(Cont& cont, size_t index) { fail_fast_assert(index
 // not_null
 //
 // Restricts a pointer or smart pointer to only hold non-null values.
-//
+// 
 // Has zero size overhead over T.
 //
-// If T is a pointer (i.e. T == U*) then
-// - allow construction from U* or U&
+// If T is a pointer (i.e. T == U*) then 
+// - allow construction from U* or U& 
 // - disallow construction from nullptr_t
 // - disallow default construction
 // - ensure construction from U* fails with nullptr
@@ -145,25 +145,25 @@ public:
     not_null(const not_null &other) = default;
     not_null& operator=(const not_null &other) = default;
 
-    template <typename U, typename Dummy = enable_if_t<std::is_convertible<U, T>::value>>
+    template <typename U, typename Dummy = std::enable_if_t<std::is_convertible<U, T>::value>>
     not_null(const not_null<U> &other)
     {
         *this = other;
     }
 
-    template <typename U, typename Dummy = enable_if_t<std::is_convertible<U, T>::value>>
+    template <typename U, typename Dummy = std::enable_if_t<std::is_convertible<U, T>::value>>
     not_null& operator=(const not_null<U> &other)
     {
         ptr_ = other.get();
         return *this;
     }
 
-    // prevents compilation when someone attempts to assign a nullptr
+    // prevents compilation when someone attempts to assign a nullptr 
     not_null(std::nullptr_t) = delete;
     not_null(int) = delete;
     not_null<T>& operator=(std::nullptr_t) = delete;
 	not_null<T>& operator=(int) = delete;
-
+    
     T get() const {
 #ifdef _MSC_VER
         __assume(ptr_ != nullptr);
@@ -226,8 +226,8 @@ namespace std
 
 #endif // _MSC_VER
 
-#if defined(GSL_THROWS_FOR_TESTING)
-#undef noexcept
-#endif // GSL_THROWS_FOR_TESTING
+#if defined(GSL_THROWS_FOR_TESTING) 
+#undef noexcept 
+#endif // GSL_THROWS_FOR_TESTING 
 
 #endif // GSL_GSL_H
